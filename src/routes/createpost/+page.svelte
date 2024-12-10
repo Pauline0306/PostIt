@@ -6,6 +6,9 @@
     let userProfile = { fullname: 'John Doe' };
   
     import Quill from 'quill';
+    /**
+	 * @type {Quill}
+	 */
     let quill;
   
     onMount(() => {
@@ -34,12 +37,13 @@
       console.log('Post Image Preview:', imagePreview);
     };
   
-    const onImageSelected = (event) => {
+    const onImageSelected = (/** @type {{ target: any; }} */ event) => {
       const input = event.target;
       if (input && input.files) {
         const file = input.files[0];
         const reader = new FileReader();
         reader.onload = (e) => {
+          // @ts-ignore
           imagePreview = e.target.result;
         };
         reader.readAsDataURL(file);
@@ -58,6 +62,7 @@
       <div class="title">
         <h3>Create New Post</h3>
       </div>
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
       <div class="icon" role="button" tabindex="0" on:click={closePostEditor}>
         &times;
       </div>
@@ -96,6 +101,7 @@
             </div>
             {#if imagePreview}
               <div class="image-preview">
+                <!-- svelte-ignore a11y_img_redundant_alt -->
                 <img src={imagePreview} alt="Image Preview" />
               </div>
             {/if}

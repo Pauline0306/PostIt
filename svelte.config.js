@@ -8,6 +8,12 @@ const config = {
   kit: {
     // Ensure you're using a proper adapter depending on your deployment
     adapter: adapter(),
+  },
+
+  vite: {
+    build: {
+      sourcemap: false,  // Disable sourcemaps in production build
+    }
   }
 };
 

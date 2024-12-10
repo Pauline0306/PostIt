@@ -1,86 +1,109 @@
 <script>
-     import { Link } from 'svelte-routing';
     import { goto } from '$app/navigation';
-
-    let email = '';
+  
+    let username = '';
     let password = '';
     let errorMessage = '';
     let isSubmitting = false;
+  
+    async function sendData() {
+      try {
+        const response = await fetch("/api/login", {
+  method: "POST", 
+  body: JSON.stringify({
+    username: username,
+    password: password,
+  }),
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
 
-    const handleSubmit = () => {
-        errorMessage = '';
+        const data = await response.json();
 
-        // Simple validation
-        if (!email || !password) {
-            errorMessage = 'Both fields are required.';
-            return;
-        }
+// Handle login success or failure
+if (response.ok && data.success) {
+  alert('Login successful!');
+  // Optionally store user data or token in localStorage/sessionStorage
+  localStorage.setItem('user', JSON.stringify(data.user)); // Store user data
+  goto('/home'); // Redirect to dashboard after login
+} else {
+  errorMessage = data.message || 'Invalid credentials!';
+}
+} catch (error) {
+errorMessage = 'Something went wrong. Please try again.';
+} finally {
+isSubmitting = false;
+}
+}
+  
+const handleSubmit = () => {
+    errorMessage = '';
+    
+    // Simple validation
+    if (!username || !password) {
+      errorMessage = 'Both fields are required.';
+      return;
+    }
 
-        // Simulate login action (replace with API call)
-        isSubmitting = true;
-        setTimeout(() => {
-            isSubmitting = false;
-            if (email === 'test@example.com' && password === 'password') {
-                alert('Login successful!');
-                // Redirect to a dashboard or home page after successful login
-                goto('/dashboard');
-            } else {
-                errorMessage = 'Invalid email or password.';
-            }
-        }, 1000);
-    };
+    isSubmitting = true;
+    sendData(); // Call sendData to handle the API request
+  };
 
-    const goToRegister = () => {
-        goto('/Register'); // Navigate to the registration page
-    };
-</script>
+  const goToRegister = () => {
+    goto('/Register');
+  };
 
-<div id="login-container">
+  </script>
+  
+  <div id="login-container">
     <div class="p-5">
-        <h3>Login</h3>
-        <h5>Welcome Back</h5>
-        <p>Please enter your email and password</p>
-        <div>
-            <label for="email">Email</label>
-            <input
-                type="text"
-                id="email"
-                placeholder="Enter your email"
-                bind:value={email}
-            />
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                bind:value={password}
-            />
-        </div>
-        {#if errorMessage}
-            <div class="error-message">{errorMessage}</div>
+      <h3>Login</h3>
+      <h5>Welcome Back</h5>
+      <p>Please enter your username and password</p>
+      <div>
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter your "
+          bind:value={username}
+        />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          bind:value={password}
+        />
+      </div>
+      {#if errorMessage}
+        <div class="error-message">{errorMessage}</div>
+      {/if}
+      <button
+        class="btn"
+        on:click={handleSubmit}
+        disabled={isSubmitting}
+      >
+        {#if isSubmitting}
+          <span class="loading">Logging in...</span>
+        {:else}
+          Login
         {/if}
-        <button
-            class="btn"
-            on:click={handleSubmit}
-            disabled={isSubmitting}
-        >
-            {#if isSubmitting}
-                <span class="loading">Logging in...</span>
-            {:else}
-                Login
-            {/if}
+      </button>
+  
+      <p class="text-muted">
+        Don't have an account? 
+        <button id="register-route" on:click={goToRegister}>
+          Register
         </button>
-
-        <p class="text-muted">
-            Don't have an account? 
-            <button id="register-route" on:click={goToRegister}>
-                Register
-            </button>
-        </p>
+      </p>
     </div>
-</div>
+  </div>
+  
+      
 
 <style>
   

@@ -17,20 +17,13 @@
 <div class="header">
   <nav class="topnav">
     <div class="upper-header">
-      <h1>PixelMinds</h1>
+      <h1 class="logo">PixelMinds</h1>
       <!-- Button that navigates to the login page -->
       <button on:click={() => goto('/Login')}>Login / Signup</button>
     </div>
   </nav>
 </div>
 
-<div class="search-container">
-  <input 
-    type="text" 
-    placeholder="Search by author's name..." 
-    bind:value={searchTerm} 
-    on:input={filterPosts}>
-</div>
 
 <div class="feed-container">
   <div class="ads">
@@ -54,14 +47,23 @@
     .header {
       padding: 10px 20px;
       background-color: #f8f9fa;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
   
+    }
+    .upper-header {
+  display: flex;
+  justify-content: space-between; /* Pushes the logo and button apart */
+  align-items: center; /* Ensures they are vertically aligned */
+  width: 95%
+}
+
+.logo {
+  font-family: Georgia, serif;
+  font-size: 1.8rem;
+  margin: 0; /* Removes any default margin for better alignment */
+}
     .topnav h1 {
       font-family: Georgia, serif;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
     }
   
     .topnav button {
@@ -70,26 +72,14 @@
       background-color: #e91e63;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
     }
   
     .topnav button:hover {
       background-color: #c2185b;
     }
-    .search-container {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
-}
 
-.search-container input[type="text"] {
-  width: 50%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 3px solid #ccc;
-  border-radius: 4px;
-}
     .feed-container {
       display: flex;
       flex-direction: column;
